@@ -1,0 +1,40 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Answer Display</title>
+</head>
+
+<body>
+    <h1>Answer Display</h1>
+    <div id="result"></div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = () => {
+            console.log('Connected to the WebSocket');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            let html = '';
+            for (const [question, ans] of Object.entries(data)) {
+                html += `<h1>質問${question.substring(1)}の答え：${ans}</h1>`;
+            }
+            document.getElementById('result').innerHTML = html;
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from the WebSocket');
+        };
+
+        ws.onerror = (error) => {
+            console.log(`WebSocket Error: ${error}`);
+        };
+    </script>
+
+</body>
+
+</html>
